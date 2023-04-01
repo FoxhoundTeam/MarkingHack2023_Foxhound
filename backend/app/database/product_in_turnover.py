@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Column, Date, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from app.database.base import BaseWithID
+from app.database.base import Base
 from app.enums import ProductInTurnoverOperationType
 
 if TYPE_CHECKING:
@@ -12,8 +12,10 @@ if TYPE_CHECKING:
     from .product import Product
 
 
-class ProductInTurnover(BaseWithID):
+class ProductInTurnover(Base):
     """Данные о вводе товаров в оборот."""
+
+    id = Column(Integer, autoincrement=True, primary_key=True, index=True, unique=True)
 
     dt: date = Column(Date, nullable=False)
 

@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from .participant import Participant
     from .product_in_turnover import ProductInTurnover
     from .product_move import ProductMove
+    from .product_out_turnover import ProductOutTurnover
 
 
 class Product(Base):
@@ -26,4 +27,5 @@ class Product(Base):
     country: str = Column(String, nullable=False)
     volume: float = Column(Float, nullable=False)
     in_turnovers: list["ProductInTurnover"] = relationship("ProductInTurnover", back_populates="product")
+    out_turnovers: list["ProductOutTurnover"] = relationship("ProductOutTurnover", back_populates="product")
     moves: list["ProductMove"] = relationship("ProductMove", back_populates="product")

@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 from sqlalchemy.orm import sessionmaker
 
@@ -19,17 +19,8 @@ class Base:
     def __tablename__(cls) -> str:
         return cls.__name__.lower()
 
-
-@as_declarative()
-class BaseWithID:
-    @declared_attr
-    def __tablename__(cls) -> str:
-        return cls.__name__.lower()
-
-    id = Column(Integer, autoincrement=True, primary_key=True, index=True, unique=True)
-
     def __str__(self):
-        return f"<{type(self).__name__} id={self.id}>"
+        return f"<{type(self).__name__}>"
 
 
 def get_session() -> "Session":

@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from .product import Product
     from .product_in_turnover import ProductInTurnover
     from .product_move import ProductMove
+    from .product_out_turnover import ProductOutTurnover
     from .sales_point import SalesPoint
 
 
@@ -21,5 +22,6 @@ class Participant(Base):
     products: list["Product"] = relationship("Product", back_populates="participant")
     sales_points: list["SalesPoint"] = relationship("SalesPoint", back_populates="participant")
     in_turnovers: list["ProductInTurnover"] = relationship("ProductInTurnover", back_populates="participant")
+    out_turnovers: list["ProductOutTurnover"] = relationship("ProductOutTurnover", back_populates="participant")
     sent_products: list["ProductMove"] = relationship("ProductMove", back_populates="sender_inn")
     received_products: list["ProductMove"] = relationship("ProductMove", back_populates="receiver_inn")

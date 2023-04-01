@@ -1,4 +1,4 @@
-from app.database.base import Base, BaseWithID, SessionLocal, get_session
+from app.database.base import Base, SessionLocal, get_session
 from app.database.participant import Participant
 from app.database.product import Product
 from app.database.product_in_turnover import ProductInTurnover
@@ -9,7 +9,6 @@ from app.database.user import User
 
 __all__ = (
     "Base",
-    "BaseWithID",
     "get_session",
     "SessionLocal",
     "Participant",
