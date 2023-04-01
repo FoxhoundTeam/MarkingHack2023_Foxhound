@@ -21,9 +21,13 @@ class ProductMove(Base):
     product: "Product" = relationship("Product", back_populates="moves")
 
     sender_inn: str = Column(String, ForeignKey("participant.inn"), nullable=False)
-    sender: "Participant" = relationship("Participant", back_populates="sent_products")
+    sender: "Participant" = relationship("Participant", back_populates="sent_products", foreign_keys=[sender_inn])
 
     receiver_inn: str = Column(String, ForeignKey("participant.inn"), nullable=False)
-    receiver: "Participant" = relationship("Participant", back_populates="received_products")
+    receiver: "Participant" = relationship(
+        "Participant",
+        back_populates="received_products",
+        foreign_keys=[receiver_inn],
+    )
 
     cnt_moved: int = Column(Integer, nullable=False)
