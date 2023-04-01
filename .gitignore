@@ -1,0 +1,5 @@
+.env
+mounts
+db
+.DS_Store
+data

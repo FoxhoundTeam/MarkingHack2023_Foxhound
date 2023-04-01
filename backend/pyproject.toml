@@ -1,0 +1,91 @@
+[tool.poetry]
+name = "marking-hack"
+version = "0.1.0"
+description = ""
+authors = ["a.petrov"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.85.0"
+alembic = "^1.8.1"
+SQLAlchemy = "^1.4.41"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+psycopg2-binary = "^2.9.4"
+pydantic = {extras = ["email", "dotenv"], version = "^1.9.1"}
+pyhumps = "^3.7.3"
+ipython = "^8.5.0"
+uvicorn = "^0.19.0"
+pandas = "^1.5.3"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.10.0"
+ruff = "^0.0.252"
+sqlalchemy2-stubs = "^0.0.2a27"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | .*\/migrations
+  | \static
+)/
+'''
+
+[tool.ruff]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "C4", # flake8-comprehensions
+    "B", # flake8-bugbear
+    "PT", # flake8-pytest-style
+    "T20", # flake8-print
+    "UP", # pyupgrade
+    "N", # pep8-naming
+    "COM", # flake8-commas
+    "SIM", # flake8-simplify
+    "G", # flake8-logging-format
+    "PIE", # flake8-pie
+    "INP", # flake8-no-pep420
+    "TCH", # flake8-type-checking
+    "PL", # Pylint
+    "RUF100", # ruff
+]
+ignore = [
+    "B008", # do not perform function calls in argument defaults
+    "C901", # too complex
+]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".git",
+    ".venv",
+    "*/migrations/*",
+]
+
+# Same as Black.
+line-length = 120
+
+# Assume Python 3.10.
+target-version = "py310"
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["PLR0913", "PLR2004"]
+
+[tool.ruff.mccabe]
+# Unlike Flake8, default to a complexity level of 10.
+max-complexity = 10
+
+[tool.ruff.pep8-naming]
+classmethod-decorators = ["classmethod"]
