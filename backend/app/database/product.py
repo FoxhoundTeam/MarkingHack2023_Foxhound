@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from uuid import uuid4
 
-from sqlalchemy import Column, Float, ForeignKey, String
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from app.database.base import Base
@@ -25,7 +25,7 @@ class Product(Base):
     tnved10: str = Column(String, nullable=False)
     brand: str = Column(String, nullable=False)
     country: str = Column(String, nullable=False)
-    volume: float = Column(Float, nullable=False)
+    volume: str = Column(String, nullable=False)
     in_turnovers: list["ProductInTurnover"] = relationship("ProductInTurnover", back_populates="product")
     out_turnovers: list["ProductOutTurnover"] = relationship("ProductOutTurnover", back_populates="product")
     moves: list["ProductMove"] = relationship("ProductMove", back_populates="product")
