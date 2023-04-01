@@ -21,12 +21,12 @@ class ProductMove(Base):
     product: "Product" = relationship("Product", back_populates="moves")
 
     sender_inn: str = Column(String, ForeignKey("participant.inn"), nullable=False)
-    sender: "Participant" = relationship("Participant", back_populates="sent_products", foreign_keys=[sender_inn])
+    sender: "Participant" = relationship("Participant", backref="sent_products", foreign_keys=[sender_inn])
 
     receiver_inn: str = Column(String, ForeignKey("participant.inn"), nullable=False)
     receiver: "Participant" = relationship(
         "Participant",
-        back_populates="received_products",
+        backref="received_products",
         foreign_keys=[receiver_inn],
     )
 

@@ -8,6 +8,7 @@ from app.database.base import Base
 
 if TYPE_CHECKING:
     from .participant import Participant
+    from .product_out_turnover import ProductOutTurnover
 
 
 class SalesPoint(Base):
@@ -20,3 +21,4 @@ class SalesPoint(Base):
     city_with_type: str = Column(String, nullable=False)
     city_fias_id: str = Column(String, nullable=False)
     postal_code: str = Column(String, nullable=False)
+    out_turnovers: list["ProductOutTurnover"] = relationship("ProductOutTurnover", back_populates="sales_point")

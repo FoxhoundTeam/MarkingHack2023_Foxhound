@@ -23,5 +23,5 @@ class Participant(Base):
     sales_points: list["SalesPoint"] = relationship("SalesPoint", back_populates="participant")
     in_turnovers: list["ProductInTurnover"] = relationship("ProductInTurnover", back_populates="participant")
     out_turnovers: list["ProductOutTurnover"] = relationship("ProductOutTurnover", back_populates="participant")
-    sent_products: list["ProductMove"] = relationship("ProductMove", back_populates="sender")
-    received_products: list["ProductMove"] = relationship("ProductMove", back_populates="receiver")
+    sent_products: list["ProductMove"]
+    received_products: list["ProductMove"]
