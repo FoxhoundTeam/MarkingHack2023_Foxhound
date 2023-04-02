@@ -15,3 +15,17 @@
 sudo docker compose -f docker-compose.prod.yml up -d
 ```
 
+## Структура каталогов
+
+* `backend` - файлы бекенда
+* `frontend` - файлы фронтенда на Vuejs + Vuetify
+* `compose` - файлы Docker и файлы конфигурации http-прокси автоматизации развёртывания
+* `research` - файлы jupyter и python для анализа данных, отладки и демонстрации алгоритмов обработки
+* `docker-compose.yml` - файл docker compose для автоматизации развёртывания веб-приложения с помощью docker compose
+
+## Команда
+
+* Антон Недогарок - анализ данных (Python, Pandas, SciPy, Jupyter), фронтенд (VueJS, Vuetify)
+* Зеленовский Сергей - анализ данных (Python, Pandas, SciPy, Jupyter)
+* Петров Антон - бэкенд, Python
+* Файзуллин Фарис - анализ данных (Python, Pandas, SciPy, Jupyter)
