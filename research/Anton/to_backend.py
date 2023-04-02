@@ -10,6 +10,7 @@
 import pandas as pd
 import numpy as np
 from dateutil import rrule
+from sklearn.linear_model import LinearRegression
 
 def on_market(dt:str, gtin:str, tnved:str = None, tnved10:str = None):
     """
