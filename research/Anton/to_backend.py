@@ -9,6 +9,7 @@
 
 import pandas as pd
 import numpy as np
+from dateutil import rrule
 
 def on_market(dt:str, gtin:str, tnved:str = None, tnved10:str = None):
     """
@@ -123,6 +124,51 @@ def import_vs_local(dt1:str, dt2:str, tnved:str, tnved10:str = None):
     
     return result
 
+def import_vs_local_series(dt1:str, dt2:str, dt3:str, tnved, tnved10:None):
+    """
+    Возвращает результат работы функции import_vs_local
+    по месяцам из интервала dt1-dt2 (даты в формате ISO)
+    для товаров категории tnved или tnved10
+    
+    прогноз выполняется по момент dt3
+    """
+    
+    start_date = datetime.fromisoformat(dt1)
+    end_date = datetime.fromisoformat(dt2)
+    forecast_date = datetime.fromisoformat(dt3)
+    list_of_dates = []
+    for dt in rrule.rrule(rrule.MONTHLY, dtstart=start_date, until=end_date):
+        list_of_dates.append(dt.strftime('%Y-%m-%d'))
+    list_of_intervals = [(list_of_dates[i], list_of_dates[i+1]) for i in range(len(list_of_dates)-1)]
+    # print(list_of_intervals)
+    y_rf   = []
+    y_eaes = []
+    y_imp  = []
+    dates  = []
+    for i in tqdm(range(len(list_of_dates)-1)):
+        rslt_i = import_vs_local(dt1 = list_of_dates[i],
+                                 dt2 = list_of_dates[i+1],
+                                 tnved = tnved,
+                                 tnved10 = tnved10)
+        # print(rslt_i)
+        y_rf.append(rslt_i[0])
+        y_eaes.append(rslt_i[1])
+        y_imp.append(rslt_i[2])
+        dates.append(list_of_dates[i+1])
+    
+    y_rf_forecast   = []
+    y_eaes_forecast = []
+    y_imp_forecast  = []
+    dates_forecast = []
+    list_of_dates_forecast = []
+    for dt in rrule.rrule(rrule.MONTHLY, dtstart=end_date, until=forecast_date):
+        list_of_dates_forecast.append(dt.strftime('%Y-%m-%d'))
+    # print(list_of_dates_forecast)
+    #TODO прогноз в y_rf_forecast, y_eaes_forecast, y_imp_forecast
+    rslt = {"x":dates, "y_rf":y_rf, "y_eaes":y_eaes, "y_imp":y_imp,
+           "x_forecast":list_of_dates_forecast[1:], "y_rf_forecast":y_rf_forecast, "y_eaes_forecast":y_eaes_forecast, "y_imp_forecast": y_imp_forecast}
+    return rslt
+
 if __name__=="__main__":
     # тест inn_balance
     inn_balance(inn="E34F3F6C9E49FE46C87D067306AAC29B",
@@ -141,3 +187,8 @@ if __name__=="__main__":
     i = 0
     import_vs_local(dt1 = '2022-01-01', dt2 = '2022-02-01', tnved = "6D2580183CEF6C8AF1CC72E1C6E6FBC4")
     # >> (4825804, 95047, 3495922)
+    
+    # тест import_vs_local_series
+    rslt = import_vs_local_series(dt1="2020-01-01", dt2="2023-01-01", dt3="2023-04-01", tnved="6D2580183CEF6C8AF1CC72E1C6E6FBC4", tnved10=None)
+    print(rslt)
+    # >> {'x': ['2020-01-01', '2020-02-01', '2020-03-01', '2020-04-01', '2020-05-01', '2020-06-01', '2020-07-01', '2020-08-01', '2020-09-01', '2020-10-01', '2020-11-01', '2020-12-01', '2021-01-01', '2021-02-01', '2021-03-01', '2021-04-01', '2021-05-01', '2021-06-01', '2021-07-01', '2021-08-01', '2021-09-01', '2021-10-01', '2021-11-01', '2021-12-01', '2022-01-01', '2022-02-01', '2022-03-01', '2022-04-01', '2022-05-01', '2022-06-01', '2022-07-01', '2022-08-01', '2022-09-01', '2022-10-01', '2022-11-01', '2022-12-01'], 'y_rf': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1950587, 4795483, 4825804, 4853464, 4437304, 3274525, 2569890, 2639608, 1818738, 2361100, 3167153, 3911790, 2899549, 0], 'y_eaes': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42147, 138933, 95047, 140862, 63590, 88250, 75206, 98480, 101459, 110563, 127135, 130891, 185340, 0], 'y_imp': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1602992, 4538471, 3495922, 3242417, 1879462, 1290417, 884664, 817241, 1710409, 2394029, 2305660, 2421518, 2076967, 0], 'x_forecast': ['2023-02-01', '2023-03-01', '2023-04-01'], 'y_rf_forecast': [], 'y_eaes_forecast': [], 'y_imp_forecast': []}
