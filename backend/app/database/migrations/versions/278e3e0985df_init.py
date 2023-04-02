@@ -1,8 +1,8 @@
 """Init
 
-Revision ID: bb6062829e6e
+Revision ID: 278e3e0985df
 Revises: 
-Create Date: 2023-04-02 00:02:25.459283
+Create Date: 2023-04-02 09:25:36.384414
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'bb6062829e6e'
+revision = '278e3e0985df'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -41,11 +41,12 @@ def upgrade() -> None:
     sa.Column('tnved10', sa.String(), nullable=False),
     sa.Column('brand', sa.String(), nullable=False),
     sa.Column('country', sa.String(), nullable=False),
-    sa.Column('volume', sa.Float(), nullable=False),
+    sa.Column('volume', sa.String(), nullable=False),
     sa.ForeignKeyConstraint(['inn'], ['participant.inn'], ),
-    sa.PrimaryKeyConstraint('gtin')
+    sa.PrimaryKeyConstraint('gtin', 'inn')
     )
-    op.create_index(op.f('ix_product_gtin'), 'product', ['gtin'], unique=True)
+    op.create_index(op.f('ix_product_gtin'), 'product', ['gtin'], unique=False)
+    op.create_index(op.f('ix_product_inn'), 'product', ['inn'], unique=False)
     op.create_table('salespoint',
     sa.Column('id_sp', sa.String(), nullable=False),
     sa.Column('inn', sa.String(), nullable=False),
@@ -61,10 +62,11 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('dt', sa.Date(), nullable=False),
     sa.Column('gtin', sa.String(), nullable=False),
+    sa.Column('prid', sa.String(), nullable=False),
     sa.Column('inn', sa.String(), nullable=False),
     sa.Column('operation_type', sa.String(), nullable=False),
     sa.Column('cnt', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['gtin'], ['product.gtin'], ),
+    sa.ForeignKeyConstraint(['gtin', 'prid'], ['product.gtin', 'product.inn'], ),
     sa.ForeignKeyConstraint(['inn'], ['participant.inn'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -73,10 +75,11 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('dt', sa.Date(), nullable=False),
     sa.Column('gtin', sa.String(), nullable=False),
+    sa.Column('prid', sa.String(), nullable=False),
     sa.Column('sender_inn', sa.String(), nullable=False),
     sa.Column('receiver_inn', sa.String(), nullable=False),
     sa.Column('cnt_moved', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['gtin'], ['product.gtin'], ),
+    sa.ForeignKeyConstraint(['gtin', 'prid'], ['product.gtin', 'product.inn'], ),
     sa.ForeignKeyConstraint(['receiver_inn'], ['participant.inn'], ),
     sa.ForeignKeyConstraint(['sender_inn'], ['participant.inn'], ),
     sa.PrimaryKeyConstraint('id')
@@ -86,12 +89,13 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('dt', sa.Date(), nullable=False),
     sa.Column('gtin', sa.String(), nullable=False),
+    sa.Column('prid', sa.String(), nullable=False),
     sa.Column('inn', sa.String(), nullable=False),
     sa.Column('id_sp', sa.String(), nullable=False),
     sa.Column('type_operation', sa.String(), nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
     sa.Column('cnt', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['gtin'], ['product.gtin'], ),
+    sa.ForeignKeyConstraint(['gtin', 'prid'], ['product.gtin', 'product.inn'], ),
     sa.ForeignKeyConstraint(['id_sp'], ['salespoint.id_sp'], ),
     sa.ForeignKeyConstraint(['inn'], ['participant.inn'], ),
     sa.PrimaryKeyConstraint('id')
@@ -110,6 +114,7 @@ def downgrade() -> None:
     op.drop_table('productinturnover')
     op.drop_index(op.f('ix_salespoint_id_sp'), table_name='salespoint')
     op.drop_table('salespoint')
+    op.drop_index(op.f('ix_product_inn'), table_name='product')
     op.drop_index(op.f('ix_product_gtin'), table_name='product')
     op.drop_table('product')
     op.drop_index(op.f('ix_user_id'), table_name='user')

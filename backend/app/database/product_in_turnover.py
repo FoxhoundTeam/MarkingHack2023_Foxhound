@@ -1,7 +1,7 @@
 from datetime import date
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Date, ForeignKey, Integer, String
+from sqlalchemy import Column, Date, ForeignKey, ForeignKeyConstraint, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.database.base import Base
@@ -19,11 +19,14 @@ class ProductInTurnover(Base):
 
     dt: date = Column(Date, nullable=False)
 
-    gtin: str = Column(String, ForeignKey("product.gtin"), nullable=False)
-    product: "Product" = relationship("Product", back_populates="in_turnovers")
+    gtin: str = Column(String, nullable=False)
+    prid: str = Column(String, nullable=False)
+    product: "Product" = relationship("Product", backref="in_turnovers", foreign_keys=[gtin, prid])
 
     inn: str = Column(String, ForeignKey("participant.inn"), nullable=False)
-    participant: "Participant" = relationship("Participant", back_populates="in_turnovers")
+    participant: "Participant" = relationship("Participant", backref="in_turnovers", foreign_keys=[inn])
 
     operation_type: ProductInTurnoverOperationType = Column(String, nullable=False)
     cnt: int = Column(Integer, nullable=False)
+
+    __table_args__ = (ForeignKeyConstraint([gtin, prid], ["product.gtin", "product.inn"]), {})

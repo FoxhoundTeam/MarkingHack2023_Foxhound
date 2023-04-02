@@ -2,7 +2,6 @@ from typing import TYPE_CHECKING
 from uuid import uuid4
 
 from sqlalchemy import Column, String
-from sqlalchemy.orm import relationship
 
 from app.database.base import Base
 
@@ -19,9 +18,9 @@ class Participant(Base):
 
     inn: str = Column(String, primary_key=True, index=True, unique=True, default=uuid4)
     region_code: str = Column(String, nullable=False)
-    products: list["Product"] = relationship("Product", back_populates="participant")
-    sales_points: list["SalesPoint"] = relationship("SalesPoint", back_populates="participant")
-    in_turnovers: list["ProductInTurnover"] = relationship("ProductInTurnover", back_populates="participant")
-    out_turnovers: list["ProductOutTurnover"] = relationship("ProductOutTurnover", back_populates="participant")
+    products: list["Product"]
+    sales_points: list["SalesPoint"]
+    in_turnovers: list["ProductInTurnover"]
+    out_turnovers: list["ProductOutTurnover"]
     sent_products: list["ProductMove"]
     received_products: list["ProductMove"]

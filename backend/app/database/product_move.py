@@ -1,7 +1,7 @@
 from datetime import date
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, Date, ForeignKey, Integer, String
+from sqlalchemy import Column, Date, ForeignKey, ForeignKeyConstraint, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.database.base import Base
@@ -17,8 +17,9 @@ class ProductMove(Base):
     id = Column(Integer, autoincrement=True, primary_key=True, index=True, unique=True)
     dt: date = Column(Date, nullable=False)
 
-    gtin: str = Column(String, ForeignKey("product.gtin"), nullable=False)
-    product: "Product" = relationship("Product", back_populates="moves")
+    gtin: str = Column(String, nullable=False)
+    prid: str = Column(String, nullable=False)
+    product: "Product" = relationship("Product", backref="moves", foreign_keys=[gtin, prid])
 
     sender_inn: str = Column(String, ForeignKey("participant.inn"), nullable=False)
     sender: "Participant" = relationship("Participant", backref="sent_products", foreign_keys=[sender_inn])
@@ -31,3 +32,5 @@ class ProductMove(Base):
     )
 
     cnt_moved: int = Column(Integer, nullable=False)
+
+    __table_args__ = (ForeignKeyConstraint([gtin, prid], ["product.gtin", "product.inn"]), {})

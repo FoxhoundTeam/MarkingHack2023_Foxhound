@@ -16,9 +16,15 @@ if TYPE_CHECKING:
 class Product(Base):
     """Справочник продукции."""
 
-    gtin: str = Column(String, primary_key=True, index=True, unique=True, default=uuid4)
-    inn: str = Column(String, ForeignKey("participant.inn"), nullable=False)
-    participant: "Participant" = relationship("Participant", back_populates="products")
+    gtin: str = Column(String, primary_key=True, index=True, default=uuid4)
+    inn: str = Column(
+        String,
+        ForeignKey("participant.inn"),
+        nullable=False,
+        primary_key=True,
+        index=True,
+    )
+    participant: "Participant" = relationship("Participant", backref="products")
     product_name: str = Column(String, nullable=False)
     product_short_name: str = Column(String, nullable=False)
     tnved: str = Column(String, nullable=False)
@@ -26,6 +32,6 @@ class Product(Base):
     brand: str = Column(String, nullable=False)
     country: str = Column(String, nullable=False)
     volume: str = Column(String, nullable=False)
-    in_turnovers: list["ProductInTurnover"] = relationship("ProductInTurnover", back_populates="product")
-    out_turnovers: list["ProductOutTurnover"] = relationship("ProductOutTurnover", back_populates="product")
-    moves: list["ProductMove"] = relationship("ProductMove", back_populates="product")
+    in_turnovers: list["ProductInTurnover"]
+    out_turnovers: list["ProductOutTurnover"]
+    moves: list["ProductMove"]
