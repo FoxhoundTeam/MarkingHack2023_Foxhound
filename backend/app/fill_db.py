@@ -52,7 +52,7 @@ def fill_product_in_turnovers(filename: str):
 
     with SessionLocal() as session:
         participants_from_db = session.execute(participants_query).scalars().all()
-        products_from_db = session.execute(products_query).scalars().all()
+        products_from_db = session.execute(products_query).all()
 
     df = df[(df["inn"].isin(participants_from_db)) & (df[["prid", "gtin"]].isin(products_from_db))]
 
@@ -64,7 +64,7 @@ def fill_product_moves(filename: str):
 
     with SessionLocal() as session:
         participants_from_db = session.execute(participants_query).scalars().all()
-        products_from_db = session.execute(products_query).scalars().all()
+        products_from_db = session.execute(products_query).all()
 
     df = df[
         (df["sender_inn"].isin(participants_from_db))
@@ -82,7 +82,7 @@ def fill_product_out_turnovers(filename: str):
 
     with SessionLocal() as session:
         participants_from_db = session.execute(participants_query).scalars().all()
-        products_from_db = session.execute(products_query).scalars().all()
+        products_from_db = session.execute(products_query).all()
         sales_points_from_db = session.execute(sales_point_query).scalars().all()
 
     df = df[
