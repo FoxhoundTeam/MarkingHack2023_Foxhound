@@ -54,7 +54,7 @@ def fill_product_in_turnovers(filename: str):
         participants_from_db = session.execute(participants_query).scalars().all()
         products_from_db = session.execute(products_query).all()
 
-    df = df[(df["inn"].isin(participants_from_db)) & (df[["prid", "gtin"]].isin(products_from_db))]
+    df = df[(df["inn"].isin(participants_from_db)) & df.set_index(["prid", "gtin"]).index.isin(products_from_db)]
 
     _fill_from_df(df, ProductInTurnover)
 
@@ -68,7 +68,7 @@ def fill_product_moves(filename: str):
 
     df = df[
         (df["sender_inn"].isin(participants_from_db))
-        & (df[["prid", "gtin"]].isin(products_from_db))
+        & df.set_index(["prid", "gtin"]).index.isin(products_from_db)
         & (df["receiver_inn"].isin(participants_from_db))
     ]
 
@@ -87,7 +87,7 @@ def fill_product_out_turnovers(filename: str):
 
     df = df[
         (df["inn"].isin(participants_from_db))
-        & (df[["prid", "gtin"]].isin(products_from_db))
+        & df.set_index(["prid", "gtin"]).index.isin(products_from_db)
         & (df["id_sp"].isin(sales_points_from_db))
     ]
 
