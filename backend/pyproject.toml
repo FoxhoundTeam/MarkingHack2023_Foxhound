@@ -18,6 +18,8 @@ pyhumps = "^3.7.3"
 ipython = "^8.5.0"
 uvicorn = "^0.19.0"
 pandas = "^1.5.3"
+sklearn = "^0.0.post1"
+python-dateutil = "^2.8.2"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -65,6 +67,7 @@ select = [
 ignore = [
     "B008", # do not perform function calls in argument defaults
     "C901", # too complex
+    "PLR0913",
 ]
 
 # Exclude a variety of commonly ignored directories.
